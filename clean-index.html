@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
+    <script>
+        const log = console.log;
+        d3.csv("afa-2015-2018-funding-recipients combined – 3.csv")
+          .then(makeViz);
+
+        function makeViz(response) {
+            log(response);
+
+            const qScale = d3.scaleQuantile()
+                  .domain(d3.range(0, 12))
+                  .range(d3.range(1, 5));
+
+            response.forEach(d => {
+                const date = new Date(d["Approval Date"]);
+
+                //Clean Approved Amount
+                //https://stackoverflow.com/questions/10003683/extract-get-a-number-from-a-string/10003709
+                d["Approved Amount"] = d["Approved Amount"].split(" ")[1].replace( /^\D+/g, '');
+                d["Approved Amount"] = d["Approved Amount"].split(",");
+                d["Approved Amount"] = +d["Approved Amount"].reduce((acc, curVal) => acc + curVal,"");
+                d.Year = date.getFullYear();
+                d.Month = date.getMonth();
+                d.Quater = qScale(d.Month);
+
+            });
+
+            //Checking Data
+            response.sort((a, b) => a["Approved Amount"] - b["Approved Amount"]);
+
+            // //Checking Data
+            // response.sort((a, b) => a.Month - b.Month);
+
+            //write json file
+            const file = {"cleanedfile": response};
+
+            document.write(JSON.stringify(file));
+            
+            
+        };
+    </script>
+</body>
+</html>

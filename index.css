@@ -1,0 +1,42 @@
+#chart {
+    width: 800px;
+    /* height: 620px; */
+    margin: 0 auto;
+    padding-top: 30px;
+}
+
+text {
+    pointer-events: none;
+}
+
+.grandparent text {
+    font-weight: bold;
+}
+
+rect {
+    stroke: #fff;
+    stroke-width: 1px;
+}
+
+rect.parent,
+.grandparent rect {
+    stroke-width: 2px;
+}
+
+.children rect.parent,
+.grandparent rect {
+    cursor: pointer;
+}
+
+.children rect.child {
+    opacity: 0;
+}
+
+.children:hover rect.child {
+    opacity: 1;
+    stroke-width: 1px;
+}
+
+.children:hover rect.parent {
+    opacity: 0;
+}
